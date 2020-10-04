@@ -10,6 +10,17 @@
     width: 100%;
     height: 35px;
   }
+  #messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #messages li {
+    padding: 5px 10px;
+  }
+  #messages li:nth-child(odd) {
+    background: #eee;
+  }
 </style>
 
 <div class="container">
@@ -27,7 +38,7 @@
           <input class="btn btn-primary" type="submit" id="Send!" />
         </div>
       </form>
-      <ul id="message">
+      <ul id="messages">
         <!-- THIS WILL BE POPULATED BY JS -->
       </ul>
     </div>
@@ -52,4 +63,9 @@
       const newMessage = document.querySelector('#user-message').value;
       socket.emit('newMessageToServer', { text: newMessage });
     });
+
+  socket.on('messageToClients', (msg) => {
+    console.log(msg);
+    document.querySelector('#messages').innerHTML += `<li>${msg.text}</li>`;
+  });
 </script>
