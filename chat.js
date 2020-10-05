@@ -7,6 +7,9 @@ app.use(express.static(__dirname + '/public'));
 const expressServer = app.listen(9000);
 
 const io = socketio(expressServer);
+
+// io.on = io.of('/admin').on
+
 io.on('connection', (socket) => {
   socket.emit('messageFromServer', { data: 'welcome to the socket io server' });
   socket.on('messageToServer', (dataFromClient) => {
@@ -16,4 +19,9 @@ io.on('connection', (socket) => {
     console.log(msg);
     io.emit('messageToClients', { text: msg.text });
   });
+});
+
+io.of('/admin').on('connection', (socket) => {
+  console.log('someone connected to the admin space');
+  io.of('/admin').emit('welcome', 'welcome to the admin channel!');
 });
