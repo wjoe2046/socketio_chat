@@ -19,6 +19,13 @@ io.on('connection', (socket) => {
     console.log(msg);
     io.emit('messageToClients', { text: msg.text });
   });
+
+  setTimeout(() => {
+    io.of('/admin').emit(
+      'welcome',
+      'Welcome to the admin channel, from the main channel!'
+    );
+  }, 2000);
 });
 
 io.of('/admin').on('connection', (socket) => {
