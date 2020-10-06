@@ -12,20 +12,13 @@ const io = socketio(expressServer);
 
 io.on('connection', (socket) => {
   socket.emit('messageFromServer', { data: 'welcome to the socket io server' });
-  socket.on('messageToServer', (dataFromClient) => {
-    console.log(dataFromClient);
+  socket.on('dataToServer', (dataFromServer) => {
+    console.log(dataFromServer);
   });
-  socket.on('newMessageToServer', (msg) => {
-    console.log(msg);
-    io.emit('messageToClients', { text: msg.text });
-  });
-
-  setTimeout(() => {
-    io.of('/admin').emit(
-      'welcome',
-      'Welcome to the admin channel, from the main channel!'
-    );
-  }, 2000);
+  socket.join('level1');
+  socket
+    .to('level1')
+    .emit('joined', `${socket.id} I have joined the level 1 room`);
 });
 
 io.of('/admin').on('connection', (socket) => {
