@@ -8,6 +8,14 @@ socket.on('connect', () => {
 socket.on('nsList', (nsData) => {
   console.log('the list namespaces has arrived');
   // console.log(nsData);
+  let namespacesDiv = document.querySelector('.namespaces');
+  namespacesDiv.innerHTML = '';
+  nsData.forEach((ns) => {
+    namespacesDiv.innerHTML += `<div class="namespace"><img src="${ns.img}"/></div>`;
+  });
+
+  //add a click listener
+  Array.from(document.getElementsByClassName('namespace')).forEach((ele) => {});
 });
 // const socket = io('http://localhost:9000', {
 //   query: {
