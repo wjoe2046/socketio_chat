@@ -27,5 +27,26 @@ namespaces.forEach((namespace) => {
     console.log(`${nsSocket.id} has joined ${namespace.endPoint}`);
     //a socket has connected to one of chatgroup namespaces; send ns group info back
     nsSocket.emit(`nsRoomLoad`, namespaces[0].rooms);
+    nsSocket.on('joinRoom', (roomToJoin, numberOfUsersCallback) => {
+      nsSocket.join(roomToJoin);
+      io.of('/wiki')
+        .in(roomToJoin)
+        .clients((error, clients) => {
+          console.log(clients.length);
+          numberOfUsersCallback(clients.length);
+        });
+    });
+    nsSocket.on('newMessageToServer', (msg) => {
+      const fullMsg = {
+        text: msg,
+        time: Date.now(),
+        username: 'rbunch',
+        avatar: 'https://via.placeholder.com/30',
+      };
+      console.log(fullMsg);
+      console.log(nsSocket.rooms);
+      const roomTitle = Object.keys(nsSocket.rooms)[1];
+      io.of('/wiki').to(roomTitle).emit('messageToClients', fullMsg);
+    });
   });
 });

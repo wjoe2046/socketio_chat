@@ -1,5 +1,6 @@
 // const username = prompt('What is your username?');
 const socket = io('http://localhost:9000/'); // the / namespace/endpoint
+let nsSocket = '';
 
 socket.on('nsList', (nsData) => {
   console.log('the list namespaces has arrived');

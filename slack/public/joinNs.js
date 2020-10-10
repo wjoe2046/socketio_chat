@@ -1,5 +1,5 @@
 function joinNs(endPoint) {
-  const nsSocket = io(`http://localhost:9000${endPoint}`);
+  nsSocket = io(`http://localhost:9000${endPoint}`);
   nsSocket.on('nsRoomLoad', (nsRooms) => {
     // console.log(nsRooms);
     let roomList = document.querySelector('.room-list');
@@ -16,6 +16,11 @@ function joinNs(endPoint) {
         console.log('someone clicked on', e.target.innerText);
       });
     });
+
+    const topRoom = document.querySelector('.room');
+    const topRoomName = topRoom.innerText;
+    // console.log(topRoomName);
+    joinRoom(topRoomName);
   });
 
   nsSocket.on('messageToClients', (msg) => {
@@ -28,6 +33,6 @@ function joinNs(endPoint) {
     .addEventListener('submit', (event) => {
       event.preventDefault();
       const newMessage = document.querySelector('#user-message').value;
-      socket.emit('newMessageToServer', { text: newMessage });
+      nsSocket.emit('newMessageToServer', { text: newMessage });
     });
 }
