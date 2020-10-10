@@ -35,10 +35,16 @@ namespaces.forEach((namespace) => {
           console.log(clients.length);
           numberOfUsersCallback(clients.length);
         });
+      const nsRoom = namespaces[0].rooms.find((room) => {
+        return room.roomTitle === roomToJoin;
+      });
+      console.log(nsRoom);
+      nsSocket.emit('historyCatchUp', nsRoom.history);
     });
+
     nsSocket.on('newMessageToServer', (msg) => {
       const fullMsg = {
-        text: msg,
+        text: msg.text,
         time: Date.now(),
         username: 'rbunch',
         avatar: 'https://via.placeholder.com/30',
@@ -46,6 +52,14 @@ namespaces.forEach((namespace) => {
       console.log(fullMsg);
       console.log(nsSocket.rooms);
       const roomTitle = Object.keys(nsSocket.rooms)[1];
+
+      const nsRoom = namespaces[0].rooms.find((room) => {
+        return room.roomTitle === roomTitle;
+      });
+
+      console.log(nsRoom);
+
+      nsRoom.addMessage(fullMsg);
       io.of('/wiki').to(roomTitle).emit('messageToClients', fullMsg);
     });
   });
