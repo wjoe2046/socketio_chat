@@ -7,13 +7,21 @@ app.use(express.static(__dirname + '/public'));
 const expressServer = app.listen(9000);
 
 const io = socketio(expressServer);
+
+// io.on = io.of('/admin').on
+
 io.on('connection', (socket) => {
   socket.emit('messageFromServer', { data: 'welcome to the socket io server' });
-  socket.on('messageToServer', (dataFromClient) => {
-    console.log(dataFromClient);
+  socket.on('dataToServer', (dataFromServer) => {
+    console.log(dataFromServer);
   });
-  socket.on('newMessageToServer', (msg) => {
-    console.log(msg);
-    io.emit('messageToClients', { text: msg.text });
-  });
+  socket.join('level1');
+  io.of('/')
+    .to('level1')
+    .emit('joined', `${socket.id} I have joined the level 1 room`);
+});
+
+io.of('/admin').on('connection', (socket) => {
+  console.log('someone connected to the admin space');
+  io.of('/admin').emit('welcome', 'welcome to the admin channel!');
 });
