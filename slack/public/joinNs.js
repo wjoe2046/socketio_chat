@@ -1,4 +1,8 @@
 function joinNs(endPoint) {
+  if (nsSocket) {
+    //check to see if nsSocket is a socket
+    nsSocket.close();
+  }
   nsSocket = io(`http://localhost:9000${endPoint}`);
   nsSocket.on('nsRoomLoad', (nsRooms) => {
     // console.log(nsRooms);
